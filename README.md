@@ -64,76 +64,121 @@ install.packages(c("dplyr", "data.table", "randomForest"))
 
 ## Getting Started
 
-### 1. Clone the repository
+## Quick Start
 
-If you have Git installed, clone the repository:
-
-```bash
-git clone https://github.com/YOUR-USERNAME/ActiGraph-CP-Raw-Processing.git
-```
-
-Then navigate into the project folder:
+### 1. Clone or download the repository
 
 ```bash
+git clone https://github.com/your-username/ActiGraph-CP-Raw-Processing.git
 cd ActiGraph-CP-Raw-Processing
 ```
 
-Alternatively, download the repository as a ZIP file from GitHub and extract it.
+Or download as a ZIP and extract to your desired location.
 
 ---
 
-### 2. Set up the project
+### 2. Open the project in RStudio
 
-Open the project folder in RStudio (recommended) or set your working directory:
+- Open RStudio  
+- Use **File → Open Project** (recommended), or set the working directory to the repository folder  
+
+---
+
+### 3. Install required packages (first time only)
 
 ```r
-setwd("path/to/ActiGraph-CP-Raw-Processing")
+install.packages(c("dplyr", "data.table", "randomForest", "Rcpp", "rstudioapi"))
 ```
 
 ---
 
-### 3. Install required packages
+### 4. Prepare your data
 
-```r
-install.packages(c("dplyr", "data.table", "randomForest"))
+Place your raw ActiGraph `.gt3x` files in a folder of your choice, for example:
+
+```
+D:/ActiGraph/raw/
 ```
 
 ---
 
-### 4. Add your data
+### 5. Run the pipeline
 
-Place raw ActiGraph `.gt3x` files in:
-
-```
-data/raw/
-```
-
----
-
-### 5. Configure the pipeline
-
-Edit:
-
-```
-config/config.R
-```
-
-Key options include:
-
-```r
-model_location <- "wrist"   # or "hip"
-run_sleep <- TRUE           # TRUE = run sleep processing, FALSE = skip
-epoch_sec <- 10
-sampling_rate <- 30
-```
-
----
-
-### 6. Run the pipeline
+#### Option A — Specify input and output folders (recommended)
 
 ```r
 source("main_pipeline.R")
+
+run_pipeline(
+  input_dir = "D:/ActiGraph/raw",
+  output_dir = "D:/ActiGraph/output",
+  model_location = "wrist",   # or "hip"
+  run_sleep = TRUE            # set to FALSE for hip placement
+)
 ```
+
+---
+
+#### Option B — Select folders interactively (Windows)
+
+```r
+source("main_pipeline.R")
+
+run_pipeline(
+  model_location = "wrist",
+  run_sleep = TRUE
+)
+```
+
+You will be prompted to select:
+1. Input folder (containing `.gt3x` files)  
+2. Output folder  
+
+> **Note:** Interactive folder selection is supported on Windows (via RStudio).  
+> For reproducible workflows, specifying paths explicitly is recommended.
+
+---
+
+### 6. Outputs
+
+Processed files will be saved to your chosen output directory, including:
+
+- **Epoch-level data**
+  - `<file>_<model>_Scored.csv`
+  - `<file>_<model>_Scored.RData`
+
+- **Daily summary file**
+  - `DBD_SummaryTable_<model>.csv`
+
+---
+
+### 7. Model selection
+
+- `"wrist"` → includes sleep detection and sleep metrics  
+- `"hip"` → activity classification only (sleep processing typically disabled)  
+
+---
+
+### 8. Example
+
+```r
+source("main_pipeline.R")
+
+run_pipeline(
+  input_dir = "C:/Data/ActiGraph/raw",
+  output_dir = "C:/Data/ActiGraph/output",
+  model_location = "hip",
+  run_sleep = FALSE
+)
+```
+
+---
+
+### Troubleshooting
+
+- Ensure `.gt3x` files are present in the input directory  
+- Ensure model files exist in the `models/` folder  
+- If interactive selection fails, provide paths explicitly  
 
 ---
 
