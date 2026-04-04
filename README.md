@@ -23,8 +23,6 @@ The pipeline is designed to support device-based measurement of movement behavio
 
 ## Repository Structure
 
-## Repository Structure
-
 ```text
 ActiGraph-CP-Raw-Processing/
 ├── LICENSE
