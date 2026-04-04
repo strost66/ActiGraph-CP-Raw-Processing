@@ -1,6 +1,6 @@
 # ActiGraph-CP-Raw-Processing
 
-End-to-end R pipeline for processing raw ActiGraph accelerometer data to derive activity and sleep outcomes in children with CP.
+End-to-end R pipeline for processing raw ActiGraph accelerometer data to derive activity and (optionally) sleep outcomes.
 
 ---
 
@@ -13,9 +13,9 @@ This repository provides a reproducible pipeline for processing raw `.gt3x` file
 3. Activity classification using random forest models (wrist or hip)  
 4. Temporal smoothing of predicted activity classes  
 5. Non-wear detection based on acceleration variability  
-6. Sleep period detection using device orientation (z-angle)  
-7. Sleep scoring and derivation of sleep metrics  
-8. Aggregation of daily activity and sleep outcomes  
+6. Optional sleep period detection using device orientation (z-angle)  
+7. Optional sleep scoring and derivation of sleep metrics  
+8. Aggregation of daily activity (and optional sleep) outcomes  
 
 The pipeline is designed to support device-based measurement of movement behaviours in free-living conditions.
 
@@ -74,7 +74,7 @@ Then navigate into the project folder:
 cd ActiGraph-CP-Raw-Processing
 ```
 
-Alternatively, you can download the repository as a ZIP file from GitHub and extract it.
+Alternatively, download the repository as a ZIP file from GitHub and extract it.
 
 ---
 
@@ -114,10 +114,11 @@ Edit:
 config/config.R
 ```
 
-Set key options such as:
+Key options include:
 
 ```r
 model_location <- "wrist"   # or "hip"
+run_sleep <- TRUE           # TRUE = run sleep processing, FALSE = skip
 epoch_sec <- 10
 sampling_rate <- 30
 ```
@@ -145,8 +146,28 @@ Select the model via:
 model_location <- "wrist"
 ```
 
-### Note
-If models are not included in the repository, users must supply compatible trained models with matching feature inputs.
+---
+
+## Sleep Processing (Optional)
+
+Sleep detection and scoring can be enabled or disabled using:
+
+```r
+run_sleep <- TRUE
+```
+
+### Recommendations
+
+- **Wrist placement:**  
+  `run_sleep <- TRUE` (recommended)
+
+- **Hip placement:**  
+  `run_sleep <- FALSE` (recommended, as hip data are not well-suited for sleep detection)
+
+When sleep processing is disabled:
+- Sleep detection steps are skipped  
+- Sleep variables are set to default values  
+- Daily summaries include activity metrics only  
 
 ---
 
@@ -167,9 +188,9 @@ data/output/
 
 Includes:
 - time spent in activity categories  
-- sleep metrics  
 - wear time metrics  
 - valid day indicators  
+- sleep metrics (if enabled)  
 
 ---
 
