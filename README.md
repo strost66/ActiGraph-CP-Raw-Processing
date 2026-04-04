@@ -1,8 +1,10 @@
-ActiGraph-CP-Raw-Processing
+# ActiGraph-CP-Raw-Processing
 
 End-to-end R pipeline for processing raw ActiGraph accelerometer data to derive activity and sleep outcomes in children with cerebral palsy (CP).
 
-Overview
+---
+
+## Overview
 
 This repository provides a reproducible pipeline for processing raw .gt3x files from ActiGraph accelerometers. The pipeline performs:
 
@@ -15,9 +17,10 @@ Sleep period detection using device orientation (z-angle)
 Sleep scoring and derivation of sleep metrics
 Aggregation of daily activity and sleep outcomes
 
-The pipeline is designed to support device-based measurement of movement behaviours in free-living conditions.
+---
 
-Repository Structure
+## Repository Structure
+```
 ActiGraph-CP-Raw-Processing/
 ├── main_pipeline.R
 ├── config/
@@ -27,7 +30,14 @@ ActiGraph-CP-Raw-Processing/
 ├── data/
 │   ├── raw/
 │   └── output/
-Requirements
+```
+## Data availability
+
+Raw accelerometer data are not included in this repository due to ethical and governance restrictions. Researchers wishing to apply the pipeline to their own data may do so by supplying raw `.gt3x` files.
+
+---
+
+## Requirements
 Software
 R (≥ 4.0 recommended)
 Required R packages
@@ -35,7 +45,7 @@ dplyr
 data.table
 randomForest
 
-Install with:
+## Install with:
 
 install.packages(c("dplyr", "data.table", "randomForest"))
 Input Data
@@ -44,18 +54,18 @@ Place files in:
 data/raw/
 Configuration
 
-All user-defined settings are specified in:
+## All user-defined settings are specified in:
 
 config/config.R
 
-Key options include:
+## Key options include:
 
 model_location <- "wrist"   # or "hip"
 epoch_sec <- 10
 sampling_rate <- 30
 Models
 
-The pipeline supports multiple random forest models corresponding to different device placements:
+## The pipeline supports multiple random forest models corresponding to different device placements:
 
 Wrist model: RF_CP_Wrist.RData
 Hip model: RF_CP_Hip.RData
@@ -63,18 +73,19 @@ Hip model: RF_CP_Hip.RData
 Select the model via:
 
 model_location <- "wrist"
-Note
+
+## Note
 
 If models are not included in the repository, users must supply compatible trained models with matching feature inputs.
 
-How to Run
+## How to Run
 
 From the project root directory:
 
 source("main_pipeline.R")
 Outputs
 
-Outputs are written to:
+## Outputs are written to:
 
 data/output/
 Per-file outputs
@@ -83,16 +94,12 @@ Per-file outputs
 Daily summary
 DBD_SummaryTable_[wrist/hip].csv
 
-Includes:
-
+## Includes:
 time spent in activity categories
 sleep metrics
 wear time metrics
 valid day indicators
-Notes on Data
-Raw accelerometer data are not included in this repository
-Users must supply their own .gt3x files
-Example data (if included) should be synthetic or de-identified
-License
+
+## License
 
 To be added.
