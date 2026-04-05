@@ -37,7 +37,7 @@ ActiGraph-CP-Raw-Processing/
 ### 1. Clone or download the repository
 
 ```bash
-git clone https://github.com/your-username/ActiGraph-CP-Raw-Processing.git
+git clone https://github.com/strost66/ActiGraph-CP-Raw-Processing.git
 cd ActiGraph-CP-Raw-Processing
 ```
 
