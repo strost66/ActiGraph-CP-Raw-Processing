@@ -1,23 +1,16 @@
-# ActiGraph-CP-Raw-Processing
+# ActiGraph CP Raw Processing Pipeline
 
-End-to-end R pipeline for processing raw ActiGraph accelerometer data to derive activity and (optionally) sleep outcomes.
+A reproducible R-based pipeline for processing raw ActiGraph `.gt3x` accelerometer data in children with cerebral palsy (CP).  
 
----
+The pipeline supports:
 
-## Overview
-
-This repository provides a reproducible pipeline for processing raw `.gt3x` files from ActiGraph accelerometers. The pipeline performs:
-
-1. Reading and timestamping raw acceleration data  
-2. Feature extraction from fixed-length epochs  
-3. Activity classification using random forest models (wrist or hip)  
-4. Temporal smoothing of predicted activity classes  
-5. Non-wear detection based on acceleration variability  
-6. Optional sleep period detection using device orientation (z-angle)  
-7. Optional sleep scoring and derivation of sleep metrics  
-8. Aggregation of daily activity (and optional sleep) outcomes  
-
-The pipeline is designed to support device-based measurement of movement behaviours in free-living conditions.
+- Raw data ingestion and timestamp alignment  
+- Feature extraction from triaxial acceleration signals  
+- Activity classification using random forest models (wrist or hip)  
+- Modal smoothing of predicted activity classes  
+- Non-wear detection  
+- Optional sleep detection and sleep metrics (wrist only)  
+- Daily aggregation of activity and sleep outcomes  
 
 ---
 
@@ -39,29 +32,6 @@ ActiGraph-CP-Raw-Processing/
 
 ---
 
-## Requirements
-
-### Software
-- R (≥ 4.0 recommended)
-
-### Required R packages
-
-```r
-dplyr
-data.table
-randomForest
-```
-
-Install with:
-
-```r
-install.packages(c("dplyr", "data.table", "randomForest"))
-```
-
----
-
-## Getting Started
-
 ## Quick Start
 
 ### 1. Clone or download the repository
@@ -71,14 +41,14 @@ git clone https://github.com/your-username/ActiGraph-CP-Raw-Processing.git
 cd ActiGraph-CP-Raw-Processing
 ```
 
-Or download as a ZIP and extract to your desired location.
+Or download as a ZIP and extract.
 
 ---
 
-### 2. Open the project in RStudio
+### 2. Open in RStudio
 
 - Open RStudio  
-- Use **File → Open Project** (recommended), or set the working directory to the repository folder  
+- Use **File → Open Project** (recommended), or set working directory to the repository folder  
 
 ---
 
@@ -92,17 +62,17 @@ install.packages(c("dplyr", "data.table", "randomForest", "Rcpp", "rstudioapi"))
 
 ### 4. Prepare your data
 
-Place your raw ActiGraph `.gt3x` files in a folder of your choice, for example:
+Place `.gt3x` files in a folder of your choice, for example:
 
 ```
-D:/ActiGraph/raw/
+D:/ActiGraph_Files/raw/
 ```
 
 ---
 
 ### 5. Run the pipeline
 
-#### Option A — Specify input and output folders (recommended)
+#### Option A — Specify folders (recommended)
 
 ```r
 source("main_pipeline.R")
@@ -110,14 +80,14 @@ source("main_pipeline.R")
 run_pipeline(
   input_dir = "D:/ActiGraph/raw",
   output_dir = "D:/ActiGraph/output",
-  model_location = "wrist",   # or "hip"
-  run_sleep = TRUE            # set to FALSE for hip placement
+  model_location = "wrist",   # "wrist" or "hip"
+  run_sleep = TRUE
 )
 ```
 
 ---
 
-#### Option B — Select folders interactively (Windows)
+#### Option B — Interactive folder selection (Windows)
 
 ```r
 source("main_pipeline.R")
@@ -129,126 +99,113 @@ run_pipeline(
 ```
 
 You will be prompted to select:
+
 1. Input folder (containing `.gt3x` files)  
 2. Output folder  
 
-> **Note:** Interactive folder selection is supported on Windows (via RStudio).  
-> For reproducible workflows, specifying paths explicitly is recommended.
+> **Note:** Interactive selection is supported on Windows via RStudio.  
+> For reproducible workflows, explicitly specifying paths is recommended.
 
 ---
 
-### 6. Outputs
+## Model Options
 
-Processed files will be saved to your chosen output directory, including:
-
-- **Epoch-level data**
-  - `<file>_<model>_Scored.csv`
-  - `<file>_<model>_Scored.RData`
-
-- **Daily summary file**
-  - `DBD_SummaryTable_<model>.csv`
-
----
-
-### 7. Model selection
-
-- `"wrist"` → includes sleep detection and sleep metrics  
-- `"hip"` → activity classification only (sleep processing typically disabled)  
-
----
-
-### 8. Example
-
-```r
-source("main_pipeline.R")
-
-run_pipeline(
-  input_dir = "C:/Data/ActiGraph/raw",
-  output_dir = "C:/Data/ActiGraph/output",
-  model_location = "hip",
-  run_sleep = FALSE
-)
-```
-
----
-
-### Troubleshooting
-
-- Ensure `.gt3x` files are present in the input directory  
-- Ensure model files exist in the `models/` folder  
-- If interactive selection fails, provide paths explicitly  
-
----
-
-## Models
-
-The pipeline supports multiple random forest models corresponding to different device placements:
-
-- Wrist model: `RF_CP_Wrist.RData`  
-- Hip model: `RF_CP_Hip.RData`  
-
-Select the model via:
-
-```r
-model_location <- "wrist"
-```
-
----
-
-## Sleep Processing (Optional)
-
-Sleep detection and scoring can be enabled or disabled using:
-
-```r
-run_sleep <- TRUE
-```
-
-### Recommendations
-
-- **Wrist placement:**  
-  `run_sleep <- TRUE` (recommended)
-
-- **Hip placement:**  
-  `run_sleep <- FALSE` (recommended, as hip data are not well-suited for sleep detection)
-
-When sleep processing is disabled:
-- Sleep detection steps are skipped  
-- Sleep variables are set to default values  
-- Daily summaries include activity metrics only  
+| Model | Description |
+|------|------------|
+| `"wrist"` | Activity classification + sleep detection and sleep metrics |
+| `"hip"`   | Activity classification only (sleep typically disabled) |
 
 ---
 
 ## Outputs
 
-Outputs are written to:
+All outputs are written to the specified output directory.
 
-```
-data/output/
-```
+### Epoch-level outputs
 
-### Per-file outputs
-- `*_Scored.RData` — full processed dataset  
-- `*_Scored.csv` — epoch-level predictions  
+- `<file>_<model>_Scored.csv`
+- `<file>_<model>_Scored.RData`
 
-### Daily summary
-- `DBD_SummaryTable_[wrist/hip].csv`
+Contain:
 
-Includes:
-- time spent in activity categories  
-- wear time metrics  
-- valid day indicators  
-- sleep metrics (if enabled)  
+- Predicted activity class  
+- Smoothed activity class  
+- Non-wear classification  
+- Sleep-related variables (if enabled)  
+- Final combined activity classification  
 
 ---
 
-## Notes on Data
+### Daily summary output
+
+- `DBD_SummaryTable_<model>.csv`
+
+Contains:
+
+- Daily activity summaries  
+- Wear time metrics  
+- Sleep metrics (if enabled)  
+
+---
+
+### Missing values
+
+- Sleep-related variables are **always included** in the daily summary  
+- When sleep processing is disabled (e.g., hip placement), these fields are populated with **blank values**  
+- Missing values are written as empty cells (not `"NA"`) for compatibility with Excel, SAS, and other tools  
+
+---
+
+## Models
+
+The pipeline expects pre-trained random forest models in the `models/` directory:
+
+```text
+models/
+├── RF_CP_Wrist.RData
+├── RF_CP_Hip.RData
+```
+
+Expected object names:
+
+- `RF_CP_Wrist.RData` → object named `wrist`  
+- `RF_CP_Hip.RData` → object named `hip`  
+
+---
+
+## Requirements
+
+- R ≥ 4.0  
+- Windows recommended for interactive folder selection  
+- Java may be required depending on ActiGraph reading functions  
+
+---
+
+## Notes
 
 - Raw accelerometer data are **not included** in this repository  
-- Users must supply their own `.gt3x` files  
-- Example data (if included) should be synthetic or de-identified  
+- Ensure `.gt3x` files are present in the input directory before running  
+- The pipeline uses relative paths and is designed to be portable across systems  
 
 ---
 
 ## License
 
-This project is licensed under the Apache License 2.0.
+This project is licensed under the Apache License, Version 2.0.
+
+You may obtain a copy of the License at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+See the `LICENSE` file in this repository for full details.
+
+---
+
+## Citation
+
+Citation for the models:
+
+> Ahmadi MN, O'Neil ME, Baque E, Boyd RN, Trost SG.  
+> Machine Learning to Quantify Physical Activity in Children with Cerebral Palsy: Comparison of Group, Group-Personalized, and Fully-Personalized Activity Classification Models. Sensors (Basel). 2020 Jul 17;20(14):3976. doi: 10.3390/s20143976
+
+---is licensed under the Apache License 2.0.
