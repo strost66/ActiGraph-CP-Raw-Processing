@@ -206,5 +206,3 @@ See the `LICENSE` file in this repository for full details.
 Citation for the models:
 
 > Ahmadi MN, O'Neil ME, Baque E, Boyd RN, Trost SG. Machine Learning to Quantify Physical Activity in Children with Cerebral Palsy: Comparison of Group, Group-Personalized, and Fully-Personalized Activity Classification Models. Sensors (Basel). 2020 Jul 17;20(14):3976. doi: 10.3390/s20143976
-
----is licensed under the Apache License 2.0.
