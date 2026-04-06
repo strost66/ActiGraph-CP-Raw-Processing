@@ -56,8 +56,6 @@ This will automatically set the working directory to the repository root, ensuri
 
 ### 3. Run the pipeline
 
-In the R console:
-
 ```r
 source("main_pipeline.R")
 
@@ -67,10 +65,11 @@ run_pipeline(
   model_location = "wrist",
   run_sleep = TRUE
 )
-```r
+```
+
 ---
 
-### 3. Install required packages (first time only)
+### 4. Install required packages (first time only)
 
 ```r
 install.packages(c("dplyr", "data.table", "randomForest", "Rcpp", "rstudioapi"))
@@ -78,7 +77,7 @@ install.packages(c("dplyr", "data.table", "randomForest", "Rcpp", "rstudioapi"))
 
 ---
 
-### 4. Prepare your data
+### 5. Prepare your data
 
 Place `.gt3x` files in a folder of your choice, for example:
 
@@ -88,7 +87,7 @@ D:/ActiGraph_Files/raw/
 
 ---
 
-### 5. Run the pipeline
+### 6. Run the pipeline
 
 #### Option A — Specify folders (recommended)
 
