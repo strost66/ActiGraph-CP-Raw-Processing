@@ -48,8 +48,26 @@ Or download as a ZIP and extract.
 ### 2. Open in RStudio
 
 - Open RStudio  
-- Use **File → Open Project** (recommended), or set working directory to the repository folder  
+- Use **File → Open Project** and select the `.Rproj` file in the repository  
 
+This will automatically set the working directory to the repository root, ensuring all relative paths work correctly.
+
+---
+
+### 3. Run the pipeline
+
+In the R console:
+
+```r
+source("main_pipeline.R")
+
+run_pipeline(
+  input_dir = "D:/ActiGraph/raw",
+  output_dir = "D:/ActiGraph/output",
+  model_location = "wrist",
+  run_sleep = TRUE
+)
+```r
 ---
 
 ### 3. Install required packages (first time only)
