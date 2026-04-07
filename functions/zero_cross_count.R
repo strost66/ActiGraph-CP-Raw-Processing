@@ -19,12 +19,3 @@ zero_cross_count <- function(x) {
   s <- sign(seq)
   sum(diff(s) != 0, na.rm = TRUE)
 }
-
-step_msg("FEATURE EXTRACTION")
-
-features <- extract_acc_features_reshape(
-  data = df1,
-  windowInSec = 10,
-  time_col = "timestamp",
-  sampling_rate = 30
-)
