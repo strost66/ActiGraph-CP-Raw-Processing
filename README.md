@@ -203,7 +203,7 @@ Expected object names:
 - Raw accelerometer data are **not included** in this repository  
 - Ensure `.gt3x` files are present in the input directory before running  
 - The pipeline uses relative paths and is designed to be portable across systems  
-
+- A non-fatal `Rcpp::export` warning may appear when sourcing one helper function. This does not affect pipeline execution if processing completes successfully.
 ---
 
 ## License
